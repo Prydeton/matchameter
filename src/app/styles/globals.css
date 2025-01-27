@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #FBFBEB;
+  --brown: #805436;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    
+  }
+}
+
+body {
+  background: var(--background);
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+header:focus,
+main:focus {
+  outline: none;
+}
