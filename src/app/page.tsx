@@ -1,5 +1,11 @@
+import { Header } from '@/components'
+
 const Home = () => {
-  return <>Matcha Meter - Coming soon</>
+  return (
+    <>
+      <Header />
+    </>
+  )
 }
 
 export default Home
