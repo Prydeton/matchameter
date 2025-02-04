@@ -1,28 +1,54 @@
-import { Header } from '@/components'
-import Card from '@/components/card'
+import { Header, ReviewCard } from '@/components'
+import Papa from 'papaparse'
+import { cache } from 'react'
 
-const Home = () => {
+const SPREADSHEET_ID = '1EupYIYwq-CSQrKRi0gUkNkVOCTWa1zOSF9szu9_Gi4k'
+
+const fetchReviews = cache(async (): Promise<Review[]> => {
+  try {
+    const res = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`, {
+      cache: 'no-store',
+    })
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch reviews: ${res.statusText}`)
+    }
+
+    const csvText = await res.text()
+    const parsedCsv = Papa.parse(csvText, { header: true }).data as Record<string, string>[]
+
+    const reviews = parsedCsv.map((r) => ({
+      name: r.Name,
+      city: r.City,
+      suburb: r.Suburb,
+      imageSrc: r['Image URL'],
+      drink: r.Drink,
+      price: Math.round(Number(r.Price) * 10) / 10,
+      rating: Math.round(Number(r.Rating) * 10) / 10,
+      hexCode: r['Hex Code'],
+      googleUrl: r['Google URL'],
+    }))
+
+    return reviews
+  } catch (error) {
+    console.error(error)
+    return []
+  }
+})
+
+const Page = async () => {
+  const reviews = await fetchReviews()
+
   return (
     <>
       <Header />
       <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,500px))] gap-4 justify-center px-4">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <Card
-            key={i}
-            name="Naau Cafe"
-            city="Melbourne"
-            suburb="CBD"
-            imageSrc="https://drive.usercontent.google.com/download?id=1yuFd8tI1OgbnP2wm4weVxNlIe7VaU7QU&authuser=0"
-            drink="Matcha"
-            price={6.0}
-            rating={5}
-            hexCode="#67923E"
-            googleUrl="https://g.co/kgs/NR1jB8o"
-          />
+        {reviews.map((review, i) => (
+          <ReviewCard key={i} {...review} />
         ))}
       </div>
     </>
   )
 }
 
-export default Home
+export default Page
