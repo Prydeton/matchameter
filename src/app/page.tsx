@@ -21,7 +21,7 @@ const fetchReviews = cache(async (): Promise<Review[]> => {
       name: r.Name,
       city: r.City,
       suburb: r.Suburb,
-      imageSrc: r['Image URL'],
+      imageSrc: `https://drive.google.com/uc?id=${r['Image URL'].split('/')[5]}`,
       drink: r.Drink,
       price: Math.round(Number(r.Price) * 10) / 10,
       rating: Math.round(Number(r.Rating) * 10) / 10,
