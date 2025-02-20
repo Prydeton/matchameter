@@ -5,7 +5,9 @@
 :root {
   --background: #FBFBEB;
   --brown: #805436;
-  --surface: #CAD5C8
+  --surface: #CAD5C8;
+  --hard-text: #1C2217;
+  --soft-text: #404938;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,7 +22,6 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   print-color-adjust: exact;
@@ -34,6 +35,15 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   color: var(--brown);
+}
+
+h2 {
+  color: var(--hard-text);
+}
+
+p {
+  color: var(--soft-text);
+  font-weight: 700;
 }
 
 header:focus,

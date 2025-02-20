@@ -42,7 +42,7 @@ const Page = async () => {
   return (
     <>
       <Header />
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,500px))] gap-4 justify-center px-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,400px))] gap-4 justify-center px-4">
         {reviews.map((review, i) => (
           <ReviewCard key={i} {...review} />
         ))}
