@@ -19,8 +19,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'competent-idea-ec6c71077c.strapiapp.com',
-        pathname: '/uploads/**/*',
+        hostname: 'competent-idea-ec6c71077c.media.strapiapp.com',
       },
     ],
   },
