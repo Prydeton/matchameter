@@ -1,33 +1,61 @@
 import { Header, ReviewCard } from '@/components'
-import Papa from 'papaparse'
 import { cache } from 'react'
 
-const SPREADSHEET_ID = '1EupYIYwq-CSQrKRi0gUkNkVOCTWa1zOSF9szu9_Gi4k'
+type GetReviewsResponse = {
+  data: {
+    id: number
+    documentId: string
+    name: string
+    city: string
+    suburb: string
+    drink: string
+    temperature: string
+    rating: number
+    hexCode: string
+    link: string
+    createdAt: string
+    updatedAt: string
+    publishedAt: string
+    price: number
+    image: {
+      id: number
+      documentID: string
+      alternativeText: string | null
+      name: string
+      url: string
+    } | null
+  }[]
+}
 
 const fetchReviews = cache(async (): Promise<Review[]> => {
   try {
-    const res = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`, {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
+    const queryPath =
+      '/api/reviews?populate[image][fields][0]=alternativeText&populate[image]&populate[image][fields][1]=url'
+
+    const url = new URL(queryPath, baseUrl)
+    const res = await fetch(url, {
       cache: 'no-store',
     })
 
-    if (!res.ok) {
-      throw new Error(`Failed to fetch reviews: ${res.statusText}`)
-    }
+    if (!res.ok) throw new Error(`Failed to fetch reviews: ${res.statusText}`)
 
-    const csvText = await res.text()
-    const parsedCsv = Papa.parse(csvText, { header: true }).data as Record<string, string>[]
+    const { data }: GetReviewsResponse = await res.json()
 
-    const reviews = parsedCsv.map((r) => ({
-      name: r.Name,
-      city: r.City,
-      suburb: r.Suburb,
-      imageSrc: `https://drive.google.com/uc?id=${r['Image URL'].split('/')[5]}`,
-      drink: r.Drink,
-      price: Math.round(Number(r.Price) * 10) / 10,
-      rating: Math.round(Number(r.Rating) * 10) / 10,
-      hexCode: r['Hex Code'],
-      googleUrl: r['Google URL'],
-    }))
+    const reviews = data.map(
+      (review) =>
+        ({
+          name: review.name,
+          city: review.city,
+          suburb: review.suburb,
+          imageSrc: `${baseUrl}${review.image?.url}`,
+          drink: review.drink,
+          price: review.price,
+          rating: review.rating,
+          hexCode: review.hexCode,
+          googleUrl: review.link,
+        }) as Review,
+    )
 
     return reviews
   } catch (error) {
