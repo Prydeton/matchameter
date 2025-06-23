@@ -48,7 +48,7 @@ const fetchReviews = cache(async (): Promise<Review[]> => {
           name: review.name,
           city: review.city,
           suburb: review.suburb,
-          imageSrc: `${baseUrl}${review.image?.url}`,
+          imageSrc: review.image?.url ? new URL(review.image.url, baseUrl).toString() : '',
           drink: review.drink,
           price: review.price,
           rating: review.rating,

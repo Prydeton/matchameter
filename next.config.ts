@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
         port: '1337',
         pathname: '/uploads/**/*',
       },
+      {
+        protocol: 'https',
+        hostname: 'competent-idea-ec6c71077c.strapiapp.com',
+        pathname: '/uploads/**/*',
+      },
     ],
   },
 }
