@@ -1,6 +1,8 @@
 import { Header, ReviewCard } from '@/components'
 import { cache } from 'react'
 
+export const maxDuration = 15
+
 type GetReviewsResponse = {
   data: {
     id: number
@@ -35,7 +37,7 @@ const fetchReviews = cache(async (): Promise<Review[]> => {
 
     const url = new URL(queryPath, baseUrl)
     const res = await fetch(url, {
-      cache: 'no-store',
+      next: { revalidate: 60 },
     })
 
     if (!res.ok) throw new Error(`Failed to fetch reviews: ${res.statusText}`)
